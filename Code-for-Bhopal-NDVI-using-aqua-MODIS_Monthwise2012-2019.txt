@@ -1,0 +1,25 @@
+Code for acquiring Bhopal NDVI using aqua MODIS (Month-wise from 2012-2019)
+Map.centerObject(bhopal,12);
+Map.addLayer(bhopal);
+Map.setOptions('satellite');
+
+//--- Start Date and End Date specify for each month.., 
+var StartDate = '2012-01-01';
+var EndDate = '2019-12-31';
+
+var ModNDVI = modis.filterDate(StartDate,EndDate)
+    .filterBounds(bhopal)
+    .select('NDVI')
+    .mean()
+    .clip(bhopal);
+var ndvirange = ModNDVI.multiply(0.0001);
+Map.addLayer(ndvirange);
+//-------Exporting images - each time u have to change image,descr,-----------
+Export.image.toDrive({
+  image: ndvirange,
+  description: 'NDVIdec2012',
+  region: bhopal,
+  scale: 250,
+  maxPixels: 1e13
+  });
+
